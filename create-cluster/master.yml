@@ -1,0 +1,32 @@
+---
+- hosts: master
+  become: yes
+  tasks:
+    - name: initialize the cluster
+      shell: kubeadm init --pod-network-cidr=10.0.0.0/16 >> cluster_initialized.txt
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+
+    - name: create .kube directory
+      become: yes
+      become_user: k8s
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/k8s/.kube/config
+        remote_src: yes
+        owner: k8s
+
+    - name: install Calico pod network
+      become: yes
+      become_user: k8s
+      shell: kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml >> pod_network_setup.txt && kubectl create -f https://docs.projectcalico.org/manifests/custom-resources.yaml >> pod_network_setup.txt && kubectl create -f https://docs.projectcalico.org/v3.17/manifests/calico.yaml >> pod_network_setup.txt
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.txt

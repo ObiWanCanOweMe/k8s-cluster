@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: create the 'k8s' group
+      group: name=k8s state=present
+
+    - name: create the 'k8s' user
+      user: name=k8s state=present createhome=yes shell=/bin/bash group=k8s
+
+    - name: allow 'k8s' to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        line: 'k8s ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: set up authorized keys for the k8s user
+      authorized_key: user=k8s key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub

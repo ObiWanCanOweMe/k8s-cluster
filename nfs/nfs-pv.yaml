@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-galera-cluster-mariadb-galera-0
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs"
+  nfs:
+    server: bark.kener.org
+    path: "/tank/k8s-store/galera/0"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-galera-cluster-mariadb-galera-1
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs"
+  nfs:
+    server: bark.kener.org
+    path: "/tank/k8s-store/galera/1"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-galera-cluster-mariadb-galera-2
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs"
+  nfs:
+    server: bark.kener.org
+    path: "/tank/k8s-store/galera/2"
