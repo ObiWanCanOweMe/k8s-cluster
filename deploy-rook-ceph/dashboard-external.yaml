@@ -11,7 +11,7 @@ spec:
   - name: dashboard
     port: 443
     protocol: TCP
-    targetPort: 7000
+    targetPort: 8443
   selector:
     app: rook-ceph-mgr
     rook_cluster: rook-ceph

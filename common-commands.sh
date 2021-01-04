@@ -28,14 +28,19 @@ kubectl create namespace rook-ceph
 helm install --namespace rook-ceph rook-ceph rook-release/rook-ceph
 kubectl create -f deploy-rook-cep/cluster.yaml
 kubectl create -f toolbox.yaml
+kubectl patch storageclass rook-ceph-block -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl create -f deploy-rook-ceph/dashboard-external.yaml
+kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
 
 ###################################
-# Reset cluster
+# Install Prometheus
 ###################################
 kubectl create namespace monitoring
-helm install prometheus prometheus-community/prometheus --namespace monitoring
-
-
+helm install prometheus prometheus-community/prometheus --namespace monitoring -f prometheus/default-values.yaml
+kubectl patch svc "kube-prometheus-stack-grafana" \
+  --namespace "monitoring" \
+  -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl get secret --namespace monitoring kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
 ###################################
 # Reset cluster
