@@ -36,7 +36,7 @@ kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['dat
 # Install Prometheus
 ###################################
 kubectl create namespace monitoring
-helm install prometheus prometheus-community/prometheus --namespace monitoring -f prometheus/default-values.yaml
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring
 kubectl patch svc "kube-prometheus-stack-grafana" \
   --namespace "monitoring" \
   -p '{"spec": {"type": "LoadBalancer"}}'
