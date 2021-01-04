@@ -7,7 +7,7 @@ kubectl create -f k8s-networking/calico.yaml
 cp /etc/kubernetes/admin.conf /home/k8s/.kube/config
 
 ###################################
-# Setup Calico & BGP
+# Setup MetalLB & BGP
 ###################################
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
